@@ -1,5 +1,5 @@
 % === Load Data from CSV ===
-filename = "TPU-16.05.25/arduino_dataPERIODIC.csv"; % Ensure this file exists in your working directory
+filename = "sample3/arduino_data15.csv"; % Ensure this file exists in your working directory
 rawData = readmatrix(filename);
 
 % === Define Conversion Constants ===
