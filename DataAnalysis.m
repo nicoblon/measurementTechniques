@@ -1,5 +1,6 @@
 % === Load Data from CSV ===
-filename = "sample3/arduino_data15.csv"; % Ensure this file exists in your working directory
+%filename = "sample3/arduino_data15.csv"; % Ensure this file exists in your working directory
+filename = 'TPU-16.05.25/arduino_dataPERIODIC.csv';
 rawData = readmatrix(filename);
 
 % === Define Conversion Constants ===
@@ -18,33 +19,21 @@ xlabel('Distance [mm]');
 ylabel('Force [N]');
 title('Force vs. Distance');
 grid on;
+%xlim([0 0.8]);  % Only show x >= 0
+%ylim([0 150]);  % Only show y >= 0
+yticks(0:10:150);        % Adds a line every 0.5 units
 
-% === Frequency Analysis Preparation ===
-% Assuming periodic force variation from a moving stepper motor
+% Get axes position in normalized figure units
+ax = gca;
+pos = ax.Position;
 
-%{
-% Uncomment the section below to perform frequency analysis once data is periodic.
+% Arrow on x-axis
+annotation('arrow', [pos(1) pos(1) + pos(3)], [pos(2) pos(2)]);
 
-% === Define Sampling Rate ===
-% You must define the true sampling rate from your experiment
-Fs = 100; % [Hz] <-- Set this to the actual rate at which data was recorded
+% Arrow on y-axis
+annotation('arrow', [pos(1) pos(1)], [pos(2) pos(2) + pos(4)]);
 
-% === Calculate FFT ===
-L = length(LoadCellReading);           % Number of samples
-Y = fft(LoadCellReading);              % Perform FFT
-P2 = abs(Y / L);                       % Two-sided spectrum
-P1 = P2(1:L/2+1);                      % One-sided spectrum
-P1(2:end-1) = 2 * P1(2:end-1);         % Scale amplitude
+set(gca, 'TickDir', 'out');      % or 'none' to remove completely
+set(gca, 'Box', 'off');          % removes top and right axes
 
-f = Fs * (0:(L/2)) / L;                % Frequency axis
 
-% === Plot Frequency Spectrum ===
-figure;
-plot(f, P1)
-xlabel('Frequency [Hz]');
-ylabel('|P1(f)|');
-title('Single-Sided Amplitude Spectrum of Load Cell Signal');
-grid on;
-
-% Optional: Apply a window function or filter to improve frequency resolution
-%}
